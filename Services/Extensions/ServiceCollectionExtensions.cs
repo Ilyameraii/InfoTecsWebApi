@@ -17,16 +17,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IValueCollectionValidationRule, RowCountRule>();
 
-        services.AddSingleton<CsvValidator>();
-
-        return services;
-    }
-
-    public static IServiceCollection AddValuesServices(this IServiceCollection services)
-    {
-        services.AddCsvValidation();
-
-        services.AddScoped<ICsvFileProcessingService, CsvFileProcessingService>();
+        services.AddSingleton<ICsvValidator, CsvValidator>();
 
         return services;
     }

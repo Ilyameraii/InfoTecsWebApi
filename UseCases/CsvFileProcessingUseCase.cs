@@ -1,16 +1,17 @@
 ﻿using Services.Contracts;
 using Services.Contracts.Validation;
+using UseCases.Contracts;
 
-namespace Services;
+namespace UseCases;
 
-public class CsvFileProcessingService(
+public class CsvFileProcessingUseCase(
     ICsvParser csvParser,
     ICsvValidator csvValidator,
     ICsvAggregator csvAggregator,
-    IUnitOfWork unitOfWork) : ICsvFileProcessingService
+    IUnitOfWork unitOfWork) : ICsvFileProcessingUseCase
 {
 
-    public async Task ProcessAsync(Stream csvStream, string fileName)
+    public async Task ExecuteAsync(Stream csvStream, string fileName)
     {
         var values = await csvParser.ParseAsync(csvStream,fileName);
         

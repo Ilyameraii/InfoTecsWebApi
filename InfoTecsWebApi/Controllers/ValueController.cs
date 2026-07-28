@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Services.Contracts;
+using UseCases.Contracts;
 
 namespace InfoTecsWebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ValueController(ICsvFileProcessingService csvFileProcessingService) : ControllerBase
+public class ValueController(ICsvFileProcessingUseCase useCase) : ControllerBase
 {
     /// <summary>
     /// 
@@ -21,7 +21,7 @@ public class ValueController(ICsvFileProcessingService csvFileProcessingService)
         }
 
         await using var stream = file.OpenReadStream();
-        await csvFileProcessingService.ProcessAsync(stream, file.FileName);
+        await useCase.ExecuteAsync(stream, file.FileName);
 
         return Ok();
     }

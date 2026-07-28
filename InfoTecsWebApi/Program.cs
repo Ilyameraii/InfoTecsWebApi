@@ -1,17 +1,45 @@
+using Context;
+using InfoTecsWebApi.Middleware;
+using Microsoft.EntityFrameworkCore;
+using Repositories;
+using Repository.Contracts;
+using Services;
+using Services.Contracts;
+using Services.Extensions;
+using UseCases;
+using UseCases.Contracts;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+
+builder.Services.AddSwaggerGen(); // генератор OpenAPI-документа от Swashbuckle
+
+// --- DbContext (Npgsql) ---
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IValueRepository, ValueRepository>();
+builder.Services.AddScoped<IResultRepository, ResultRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddSingleton<ICsvParser, CsvParser>();
+builder.Services.AddSingleton<ICsvAggregator, CsvAggregator>();
+
+builder.Services.AddScoped<ICsvFileProcessingUseCase, CsvFileProcessingUseCase>();
+
+builder.Services.AddCsvValidation();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>(); // вот тут, до MapControllers и т.д.
+
 app.MapControllers();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();       // публикует JSON, обычно по /swagger/v1/swagger.json
+    app.UseSwaggerUI();     // рисует UI, обычно по /swagger
 }
 
 app.UseHttpsRedirection();
