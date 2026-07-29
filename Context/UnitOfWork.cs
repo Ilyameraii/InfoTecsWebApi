@@ -5,7 +5,7 @@ using Services.Contracts;
 namespace Context;
 
 public class UnitOfWork(
-    AppDbContext dbContext,
+    AppDbContext context,
     IValueRepository valueRepository,
     IResultRepository resultRepository) : IUnitOfWork
 {
@@ -14,15 +14,15 @@ public class UnitOfWork(
 
     public async Task ExecuteInTransactionAsync(Func<Task> action)
     {
-        var strategy = dbContext.Database.CreateExecutionStrategy();
+        var strategy = context.Database.CreateExecutionStrategy();
 
         await strategy.ExecuteAsync(async () =>
         {
-            await using var transaction = await dbContext.Database.BeginTransactionAsync();
+            await using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
                 await action();
-                await dbContext.SaveChangesAsync();
+                await context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
             catch
