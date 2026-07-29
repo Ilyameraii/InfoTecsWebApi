@@ -8,4 +8,5 @@ public interface IValueRepository
 
     Task AddRangeAsync(IEnumerable<ValueRecord> values);
 
+    Task<IReadOnlyList<ValueRecord>> GetLast10SortedAsync(string fileName);
 }

@@ -18,4 +18,13 @@ public class ValueRepository(AppDbContext context) : IValueRepository
     {
         await context.Values.AddRangeAsync(values);
     }
+
+    public async Task<IReadOnlyList<ValueRecord>> GetLast10SortedAsync(string fileName)
+    {
+        return await context.Values.AsNoTracking()
+            .Where(v => v.FileName == fileName)
+            .OrderByDescending(v => v.Date)
+            .Take(10)
+            .ToListAsync();
+    }
 }
