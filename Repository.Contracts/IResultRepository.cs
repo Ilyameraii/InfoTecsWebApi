@@ -7,5 +7,5 @@ public interface IResultRepository
 {
     Task UpsertAsync(ResultRecord result);
 
-    Task<List<ResultRecord>> GetFilteredAsync(ResultFilter filter);
+    Task<IReadOnlyList<ResultRecord>> GetFilteredAsync(ResultFilter filter);
 }

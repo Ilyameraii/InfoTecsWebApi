@@ -34,7 +34,7 @@ public class ResultRepository(AppDbContext context, IEnumerable<IResultFilterStr
             .FirstOrDefaultAsync(r => r.FileName == fileName);
     }
     
-    public async Task<List<ResultRecord>> GetFilteredAsync(ResultFilter filter)
+    public async Task<IReadOnlyList<ResultRecord>> GetFilteredAsync(ResultFilter filter)
     {
         var query = context.Results.AsQueryable();
 
