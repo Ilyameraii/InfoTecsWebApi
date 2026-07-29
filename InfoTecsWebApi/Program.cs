@@ -2,6 +2,7 @@ using Context;
 using InfoTecsWebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
+using Repositories.Extensions;
 using Repository.Contracts;
 using Services;
 using Services.Contracts;
@@ -19,8 +20,9 @@ builder.Services.AddSwaggerGen(); // генератор OpenAPI-документ
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IValueRepository, ValueRepository>();
-builder.Services.AddScoped<IResultRepository, ResultRepository>();
+builder.Services.AddRepositories();
+builder.Services.AddFilterStrategies();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddSingleton<ICsvParser, CsvParser>();
