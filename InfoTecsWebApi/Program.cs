@@ -27,6 +27,7 @@ builder.Services.AddSingleton<ICsvParser, CsvParser>();
 builder.Services.AddSingleton<ICsvAggregator, CsvAggregator>();
 
 builder.Services.AddScoped<ICsvFileProcessingUseCase, CsvFileProcessingUseCase>();
+builder.Services.AddScoped<IGetFilteredResultsUseCase, GetFilteredResultsUseCase>();
 
 builder.Services.AddCsvValidation();
 
