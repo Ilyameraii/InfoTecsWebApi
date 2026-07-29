@@ -9,7 +9,7 @@ namespace InfoTecsWebApi.Controllers;
 public class ResultController(IGetFilteredResultsUseCase useCase): ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetFiltered(ResultFilter filters)
+    public async Task<IActionResult> GetFiltered([FromQuery] ResultFilter filters)
     { 
         var results = await useCase.ExecuteAsync(filters);
         return Ok(results);
