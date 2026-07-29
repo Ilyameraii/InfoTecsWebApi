@@ -2,12 +2,13 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
+using Repository.Contracts.Filtering;
 using Repository.Contracts.Models;
 
 namespace Repositories;
 
 
-public class ResultRepository(AppDbContext db) : IResultRepository
+public class ResultRepository(AppDbContext context, IEnumerable<IResultFilterStrategy> strategies) : IResultRepository
 {
     public async Task UpsertAsync(ResultRecord result)
     {
@@ -15,7 +16,7 @@ public class ResultRepository(AppDbContext db) : IResultRepository
 
         if (existing is null)
         {
-            await db.Results.AddAsync(result);
+            await context.Results.AddAsync(result);
             return;
         }
 
@@ -29,49 +30,19 @@ public class ResultRepository(AppDbContext db) : IResultRepository
     }
     private async Task<ResultRecord?> GetByFileNameAsync(string fileName)
     {
-        return await db.Results
+        return await context.Results
             .FirstOrDefaultAsync(r => r.FileName == fileName);
     }
     
     public async Task<List<ResultRecord>> GetFilteredAsync(ResultFilter filter)
     {
-        var query = db.Results.AsQueryable();
+        var query = context.Results.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.FileName))
+        foreach (var strategy in strategies.Where(s => s.IsApplicable(filter)))
         {
-            query = query.Where(r => r.FileName == filter.FileName);
+            query = strategy.Apply(query, filter);
         }
 
-        if (filter.MinDateFrom.HasValue)
-        {
-            query = query.Where(r => r.MinDate >= filter.MinDateFrom.Value);
-        }
-
-        if (filter.MinDateTo.HasValue)
-        {
-            query = query.Where(r => r.MinDate <= filter.MinDateTo.Value);
-        }
-
-        if (filter.AverageValueFrom.HasValue)
-        {
-            query = query.Where(r => r.AverageValue >= filter.AverageValueFrom.Value);
-        }
-
-        if (filter.AverageValueTo.HasValue)
-        {
-            query = query.Where(r => r.AverageValue <= filter.AverageValueTo.Value);
-        }
-
-        if (filter.AverageExecutionTimeFrom.HasValue)
-        {
-            query = query.Where(r => r.AverageExecutionTime >= filter.AverageExecutionTimeFrom.Value);
-        }
-
-        if (filter.AverageExecutionTimeTo.HasValue)
-        {
-            query = query.Where(r => r.AverageExecutionTime <= filter.AverageExecutionTimeTo.Value);
-        }
-
-        return await query.AsNoTracking().ToListAsync();
+        return await query.ToListAsync();
     }
 }
