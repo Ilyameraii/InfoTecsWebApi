@@ -5,13 +5,9 @@ namespace InfoTecsWebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ValueController(ICsvFileProcessingUseCase useCase) : ControllerBase
+public class ValueController(ICsvFileProcessingUseCase fileProcessingUseCase) : ControllerBase
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="file"></param>
-    /// <returns></returns>
+    
     [HttpPost("upload")]
     public async Task<IActionResult> UploadCsv(IFormFile file)
     {
@@ -21,7 +17,7 @@ public class ValueController(ICsvFileProcessingUseCase useCase) : ControllerBase
         }
 
         await using var stream = file.OpenReadStream();
-        await useCase.ExecuteAsync(stream, file.FileName);
+        await fileProcessingUseCase.ExecuteAsync(stream, file.FileName);
 
         return Ok();
     }
