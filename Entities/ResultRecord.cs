@@ -1,9 +1,21 @@
 namespace Entities;
 
+/// <summary>
+/// Агрегированная запись интегральных показателей, рассчитанных по значениям
+/// одного CSV-файла (таблица Results). Создаётся и обновляется на основе
+/// содержимого файла; при повторной обработке файла с тем же именем
+/// перезаписывается.
+/// </summary>
 public class ResultRecord
 {
+    /// <summary>
+    /// Идентификатор записи в базе данных.
+    /// </summary>
     public long Id { get; set; }
 
+    /// <summary>
+    /// Имя обработанного CSV-файла. Уникально в пределах таблицы Results.
+    /// </summary>
     public required string FileName { get; set; }
 
     /// <summary>

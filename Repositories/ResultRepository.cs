@@ -7,9 +7,14 @@ using Repository.Contracts.Models;
 
 namespace Repositories;
 
-
+/// <summary>
+/// Реализация <see cref="IResultRepository"/> на основе EF Core и <see cref="AppDbContext"/>.
+/// Выполняет upsert агрегированных результатов по имени файла и применяет
+/// зарегистрированные стратегии <see cref="IResultFilterStrategy"/> для фильтрации.
+/// </summary>
 public class ResultRepository(AppDbContext context, IEnumerable<IResultFilterStrategy> strategies) : IResultRepository
 {
+    /// <inheritdoc/>
     public async Task UpsertAsync(ResultRecord result)
     {
         var existing = await GetByFileNameAsync(result.FileName);
@@ -28,12 +33,14 @@ public class ResultRepository(AppDbContext context, IEnumerable<IResultFilterStr
         existing.MaxValue = result.MaxValue;
         existing.MinValue = result.MinValue;
     }
+    
     private async Task<ResultRecord?> GetByFileNameAsync(string fileName)
     {
         return await context.Results
             .FirstOrDefaultAsync(r => r.FileName == fileName);
     }
     
+    /// <inheritdoc/>
     public async Task<IReadOnlyList<ResultRecord>> GetFilteredAsync(ResultFilter filter)
     {
         var query = context.Results.AsQueryable();
