@@ -21,11 +21,11 @@ public class ValueController(
     /// <param name="file">Загружаемый CSV-файл.</param>
     /// <returns>200 OK при успешной обработке; 400 Bad Request со списком ошибок при невалидном файле.</returns>
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadCsv(IFormFile file)
+    public async Task<IActionResult> UploadCsv(IFormFile? file)
     {
-        if (file.Length == 0)
+        if (file is null || file.Length == 0)
         {
-            return BadRequest("Файл пуст");
+            return BadRequest("Файл не выбран или пуст");
         }
 
         await using var stream = file.OpenReadStream();

@@ -3,6 +3,10 @@ using Services.Contracts.Validation;
 
 namespace Services.Validation.Rules;
 
+/// <summary>
+/// Реализация <see cref="IValueValidationRule"/>.
+/// Проверяет, что значение показателя (<see cref="ValueRecord.Value"/>) не отрицательное.
+/// </summary>
 public class ValueNonNegativeRule : IValueValidationRule
 {
     /// <inheritdoc/>

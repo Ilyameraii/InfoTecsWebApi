@@ -5,10 +5,17 @@ using Services.Contracts.Exceptions;
 
 namespace Services;
 
+/// <summary>
+/// Реализация <see cref="ICsvParser"/>.
+/// Построчно разбирает CSV-поток формата "Date;ExecutionTime;Value", пропуская заголовок
+/// и пустые строки, и выбрасывает <see cref="CsvValidationException"/> при несоответствии
+/// количества полей, отсутствии значений или ошибках преобразования типов.
+/// </summary>
 public class CsvParser : ICsvParser
 {
     private const string DateFormat = "yyyy-MM-ddTHH-mm-ss.ffffZ";
 
+    /// <inheritdoc/>
     public async Task<IReadOnlyCollection<ValueRecord>> ParseAsync(Stream csvStream, string fileName)
     {
         var rows = new List<ValueRecord>();

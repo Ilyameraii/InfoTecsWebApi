@@ -3,8 +3,15 @@ using Services.Contracts;
 
 namespace Services;
 
+/// <summary>
+/// Реализация <see cref="ICsvAggregator"/>.
+/// Вычисляет интегральные показатели (дельту времени, среднее время выполнения,
+/// среднее, медианное, минимальное и максимальное значения) по коллекции строк,
+/// сортируя значения показателя для расчёта медианы, минимума и максимума.
+/// </summary>
 public class CsvAggregator : ICsvAggregator
 {
+    /// <inheritdoc/>
     public ResultRecord Calculate(string fileName, IReadOnlyCollection<ValueRecord> rows)
     {
         var minDate = rows.Min(r => r.Date);

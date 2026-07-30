@@ -3,6 +3,10 @@ using Services.Contracts.Validation;
 
 namespace Services.Validation.Rules;
 
+/// <summary>
+/// Реализация <see cref="IValueValidationRule"/>.
+/// Проверяет, что время выполнения (<see cref="ValueRecord.ExecutionTime"/>) не отрицательное.
+/// </summary>
 public class ExecutionTimeNonNegativeRule : IValueValidationRule
 {
     /// <inheritdoc/>

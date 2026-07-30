@@ -3,6 +3,10 @@ using Services.Contracts.Validation;
 
 namespace Services.Validation.Rules;
 
+/// <summary>
+/// Реализация <see cref="IValueValidationRule"/>.
+/// Проверяет, что дата записи не позже текущего момента времени (UTC).
+/// </summary>
 public class DateNotInFutureRule : IValueValidationRule
 {
     /// <inheritdoc/>

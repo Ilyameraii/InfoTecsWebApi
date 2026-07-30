@@ -3,6 +3,11 @@ using Services.Contracts.Validation;
 
 namespace Services.Validation.Rules;
 
+/// <summary>
+/// Реализация <see cref="IValueCollectionValidationRule"/>.
+/// Проверяет, что количество строк в файле находится в допустимом диапазоне
+/// от <see cref="MinRows"/> до <see cref="MaxRows"/> включительно.
+/// </summary>
 public class RowCountRule : IValueCollectionValidationRule
 {
     private const int MinRows = 1;
